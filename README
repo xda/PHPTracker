@@ -5,5 +5,5 @@ manage peer announcements and provoding initial seed.
 
 For examples see example_*.php or check http://php-tracker.org/
 
-If you want to use the MySQL persistnce object, see mysql.sql for the table structure.
+If you want to use the MySQL persistance object, see mysql.sql for the table structure.
 Tests can be run with PHPUnit, see phpunit.xml for bootstrap configuration.
