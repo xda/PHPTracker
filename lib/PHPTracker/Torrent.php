@@ -68,12 +68,13 @@ class PHPTracker_Torrent
      * @param integer $size_piece To intialize 'size_piece' attribute.
      * @param string $file_path Optional. To set 'file_path' attribute. If not set, will be loaded automatically.
      * @param string $name Optional. To set 'name' attribute. If not set, will be loaded automatically.
+     * @param datetime $seed_expires Optional. Set time when the local seed expires.
      * @param integer $length Optional. To set 'length' attribute. If not set, will be loaded automatically.
      * @param string $pieces Optional. To set 'pieces' attribute. If not set, will be loaded automatically.
      * @param string $info_hash Optional. To set 'info_hash' attribute. If not set, will be loaded automatically.
      * @throws PHPTracker_Error When the piece size is invalid.
      */
-    public function __construct( PHPTracker_File_File $file, $size_piece, $file_path = null, $name = null, $length = null, $pieces = null, $info_hash = null )
+    public function __construct( PHPTracker_File_File $file, $size_piece, $file_path = null, $name = null, $seed_expires = null, $length = null, $pieces = null, $info_hash = null, $seed_enabled = 1)
     {
         if ( 0 >= $size_piece = intval( $size_piece ) )
         {
@@ -84,11 +85,13 @@ class PHPTracker_Torrent
         $this->file         = $file;
 
         // Optional parameters. If we set them here, they will not be lazy-loaded.
+	$this->seed_expires = $seed_expires;
         $this->length       = $length;
         $this->name         = $name;
         $this->file_path    = $file_path;
         $this->pieces       = $pieces;
         $this->info_hash    = $info_hash;
+        $this->seed_enabled = $seed_enabled;
     }
 
     /**
@@ -142,6 +145,12 @@ class PHPTracker_Torrent
                 break;
             case 'size_piece':
                 return $this->size_piece;
+                break;
+            case 'seed_expires':
+		return $this->seed_expires;
+                break;
+            case 'seed_enabled':
+		return $this->seed_enabled;
                 break;
             default:
                 throw new PHPTracker_Error( "Can't access attribute $attribute of " . __CLASS__ );

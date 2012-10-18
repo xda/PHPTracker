@@ -51,14 +51,18 @@ SET
     `pieces_length` = :pieces_length,
     `pieces`        = :pieces,
     `name`          = :name,
-    `path`          = :path
+    `path`          = :path,
+    `seed_enabled`  = :seed_enabled,
+    `seed_expires`  = :seed_expires
 ON DUPLICATE KEY UPDATE
     `info_hash`     = VALUES( `info_hash` ),
     `length`        = VALUES( `length` ),
     `pieces_length` = VALUES( `pieces_length` ),
     `pieces`        = VALUES( `pieces` ),
     `name`          = VALUES( `name` ),
-    `path`          = VALUES( `path` )
+    `path`          = VALUES( `path` ),
+    `seed_enabled`  = VALUES( `seed_enabled` ),
+    `seed_expires`  = VALUES( `seed_expires` )
 SQL;
 
         $this->query( $sql, array(
@@ -68,6 +72,8 @@ SQL;
             ':pieces'            => $torrent->pieces,
             ':name'              => $torrent->name,
             ':path'              => $torrent->file_path,
+            ':seed_enabled'      => $torrent->seed_enabled,
+            ':seed_expires'      => $torrent->seed_expires,
         ) );
     }
 
@@ -88,7 +94,9 @@ SELECT
     `pieces_length`,
     `pieces`,
     `name`,
-    `path`
+    `path`,
+    `seed_enabled`,
+    `seed_expires`
 FROM
     `phptracker_torrents`
 WHERE
@@ -110,7 +118,9 @@ SQL;
                 $results[0]['name'],
                 $results[0]['length'],
                 $results[0]['pieces'],
-                $results[0]['info_hash']
+                $results[0]['info_hash'],
+                $results[0]['seed_enabled'],
+                $results[0]['seed_expires']
             );
         }
         return null;
@@ -184,6 +194,30 @@ FROM
     `phptracker_torrents`
 WHERE
     `status` = 'active'
+SQL;
+
+        return $this->query( $sql, array() );
+    }
+
+    /**
+     * Return all the inf_hashes and lengths of the active arrays .
+     *
+     * @return array An array of arrays having keys 'info_hash' and 'length' accordingly.
+     */
+    public function getAllActiveSeeds()
+    {
+        $sql = <<<SQL
+SELECT
+    `info_hash`,
+    `length`
+FROM
+    `phptracker_torrents`
+WHERE
+    `status` = 'active'
+AND
+    `seed_enabled` = 1
+AND 
+    (`seed_expires` > NOW() OR `seed_expires` IS NULL)
 SQL;
 
         return $this->query( $sql, array() );

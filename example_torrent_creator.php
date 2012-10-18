@@ -42,3 +42,7 @@ echo $core->createTorrent( '../test.avi', 524288 );
 
 // You can also specify basename for the file in the torrent (if different from physical):
 // echo $core->createTorrent( '../test.avi', 524288, 'puderzucker.avi' );
+
+// Also you can specify how long to seed the file locally. Seed will stop after it reaches this date or if there 
+//  are enough external seeders. Defaults to 1 year.
+// echo $core->createTorrent( '../test.avi', 524288, 'puderzucker.avi', '2012-12-31 23:59:59' );

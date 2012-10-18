@@ -114,7 +114,7 @@ class PHPTracker_Seeder_Server extends PHPTracker_Concurrency_Forker
 
         do
         {
-            $all_torrents = $persistence->getAllInfoHash();
+            $all_torrents = $persistence->getAllActiveSeeds();
 
             foreach ( $all_torrents as $torrent_info )
             {
